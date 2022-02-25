@@ -1,0 +1,18 @@
+- name: Debug shell command
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  vars:
+    shell_commands:
+      - echo "No command specified"
+  tasks:
+    - name: Run custom shell command
+      command:
+        shell: "{{ item }}"
+      loop: "{{ shell_commands }}"
+      register: shell_commands_output
+
+    - debug:
+        msg:
+          stdout: "{{ shell_commands_output.stdout_lines }}"
+          stderr: "{{ shell_commands_output.stderr_lines }}"
