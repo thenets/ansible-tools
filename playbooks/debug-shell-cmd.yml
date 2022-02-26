@@ -7,12 +7,15 @@
       - echo "No command specified"
   tasks:
     - name: Run custom shell command
-      command:
-        shell: "{{ item }}"
+      ansible.builtin.shell:
+        cmd: "{{ item }}"
       loop: "{{ shell_commands }}"
       register: shell_commands_output
 
     - debug:
         msg:
-          stdout: "{{ shell_commands_output.stdout_lines }}"
-          stderr: "{{ shell_commands_output.stderr_lines }}"
+          stdout: "{{ item.stdout_lines }}"
+          stderr: "{{ item.stderr_lines }}"
+      loop_control:
+        label: item.cmd
+      loop: "{{ shell_commands_output.results }}"
